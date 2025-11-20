@@ -26,14 +26,28 @@ class AuthService:
     async def register_user(
         self, db: AsyncIOMotorDatabase, signup: SignupRequest
     ) -> tuple[dict[str, Any], TokenMeta, TokenMeta]:
+        normalized_full_name = signup.full_name.strip()
+
         existing_user = await self.user_service.get_by_email(db, signup.email)
         if existing_user is not None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
-        signup_payload = signup.model_dump(exclude_none=True)
+        name_conflict = await self.user_service.get_by_full_name(db, normalized_full_name)
+        if name_conflict is not None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Full name already registered")
+
+        signup_payload = signup.model_dump()
         password = signup_payload.pop("password")
+        signup_payload.pop("full_name", None)
+        full_name = normalized_full_name
+        if not full_name:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Full name cannot be blank")
         password_hash = get_password_hash(password)
-        user = await self.user_service.create_user(db, signup_payload, password_hash)
+        user_data: dict[str, Any] = {
+            "email": signup_payload["email"],
+            "personal_info": {"full_name": full_name},
+        }
+        user = await self.user_service.create_user(db, user_data, password_hash)
         return user, *self._issue_tokens(user)
 
     async def authenticate_user(
@@ -66,7 +80,11 @@ class AuthService:
         await db[TOKEN_BLACKLIST_COLLECTION].insert_one(entry)
 
     def _issue_tokens(self, user: dict[str, Any]) -> tuple[TokenMeta, TokenMeta]:
-        extra_claims = {"email": user.get("email")}
+        personal_info = user.get("personal_info") or {}
+        extra_claims = {
+            "email": user.get("email"),
+            "full_name": personal_info.get("full_name"),
+        }
         access_meta = create_access_token(subject=str(user.get("id")), extra_claims=extra_claims)
         refresh_meta = create_refresh_token(subject=str(user.get("id")), extra_claims=extra_claims)
         return access_meta, refresh_meta

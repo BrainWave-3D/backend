@@ -1,9 +1,10 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.schemas.user import UserBase, UserRead
+from app.schemas.user import UserRead
 
 
-class SignupRequest(UserBase):
+class SignupRequest(BaseModel):
+    full_name: str = Field(min_length=1, max_length=255)
     email: EmailStr
     password: str = Field(min_length=8, max_length=128)
 

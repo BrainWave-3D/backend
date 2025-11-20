@@ -21,6 +21,11 @@ async def connect_to_db() -> None:
 
     db = client[settings.mongo_db_name]
     await db[USERS_COLLECTION].create_index("email", unique=True)
+    await db[USERS_COLLECTION].create_index(
+        "personal_info.full_name",
+        unique=True,
+        partialFilterExpression={"personal_info.full_name": {"$type": "string"}},
+    )
     await db[TOKEN_BLACKLIST_COLLECTION].create_index("jti", unique=True)
     await db[TOKEN_BLACKLIST_COLLECTION].create_index("expires_at", expireAfterSeconds=0)
 
