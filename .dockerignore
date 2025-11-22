@@ -1,0 +1,42 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.swp
+*.tmp
+*.log
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+
+# Git
+.git/
+.gitignore
+
+# Docker artifacts
+Dockerfile*
+.dockerignore
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.iml
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# Test / coverage artifacts
+htmlcov/
+.tox/
+.nox/
+.coverage*
+.pytest_cache/
+.mypy_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
