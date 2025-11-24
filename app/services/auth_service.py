@@ -32,9 +32,9 @@ class AuthService:
         if existing_user is not None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
-        name_conflict = await self.user_service.get_by_full_name(db, normalized_full_name)
-        if name_conflict is not None:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Full name already registered")
+        # name_conflict = await self.user_service.get_by_full_name(db, normalized_full_name)
+        # if name_conflict is not None:
+        #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Full name already registered")
 
         signup_payload = signup.model_dump()
         password = signup_payload.pop("password")
