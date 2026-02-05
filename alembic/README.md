@@ -1,1 +1,0 @@
-This project uses MongoDB, so traditional Alembic migrations are not required. The directory is retained to match the original scaffold requirements.

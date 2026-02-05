@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256")
     access_token_expire_minutes: int = Field(default=15, alias="ACCESS_TOKEN_EXPIRE_MINUTES")
     refresh_token_expire_minutes: int = Field(default=60 * 24 * 7, alias="REFRESH_TOKEN_EXPIRE_MINUTES")
+    ml_model_path: str | None = Field(default=None, alias="ML_MODEL_PATH")
 
 
 @lru_cache
