@@ -9,6 +9,7 @@ from app.api import auth as auth_routes
 from app.api import predict as predict_routes
 from app.api import profile as profile_routes
 from app.core.config import settings
+from app.core.metrics import metrics_middleware, metrics_router
 from app.db.session import close_db, connect_to_db
 
 
@@ -24,6 +25,8 @@ async def lifespan(_: FastAPI):
 def create_app() -> FastAPI:
     app = FastAPI(title=settings.project_name, lifespan=lifespan)
 
+    app.middleware("http")(metrics_middleware)
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -35,6 +38,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_routes.router)
     app.include_router(profile_routes.router)
     app.include_router(predict_routes.router)
+    app.include_router(metrics_router)
 
     return app
 

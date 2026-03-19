@@ -90,3 +90,45 @@ Use the `access_token` in the `Authorization` header for protected routes. Refre
 - Add rate limiting and audit logging.
 - Flesh out the ML stubs in `app/ml/` once models are ready.
 - Extend services for push notifications or analytics integrations as needed.
+
+## Observability Stack (Prometheus + Grafana)
+
+This repository now includes a complete monitoring setup:
+
+- FastAPI metrics endpoint at `GET /metrics`
+- Prometheus scrape configuration
+- Grafana provisioning (datasource + dashboards)
+
+### Start Everything With Docker Compose
+
+```bash
+docker compose up -d --build
+```
+
+### Service URLs
+
+- API: `http://localhost:8000`
+- API metrics: `http://localhost:8000/metrics`
+- Prometheus: `http://localhost:9090`
+- Grafana: `http://localhost:3000` (default login: `admin` / `admin`)
+
+### Pre-Provisioned Dashboards
+
+Grafana automatically loads dashboards from `monitoring/grafana/dashboards/`:
+
+- `Backend API Overview`
+- `Backend Status Breakdown`
+- `Backend Runtime Health`
+
+### Key Monitoring Files
+
+- Compose stack: `docker-compose.yml`
+- Prometheus config: `monitoring/prometheus/prometheus.yml`
+- Grafana datasource: `monitoring/grafana/provisioning/datasources/prometheus.yml`
+- Grafana dashboard provider: `monitoring/grafana/provisioning/dashboards/dashboards.yml`
+
+### Stop Stack
+
+```bash
+docker compose down
+```

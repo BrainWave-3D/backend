@@ -1,4 +1,4 @@
-name: Build and Deploy Container
+name: Build and Push to DockerHub
 
 on:
   push:
@@ -28,19 +28,9 @@ jobs:
           context: .
           push: true
           tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
-  
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    
-    steps:
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy container to Azure Web App
-        uses: azure/webapps-deploy@v2
+      - name: Restart Azure Web App
+        uses: azure/cli@v2
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          images: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+          inlineScript: |
+            az webapp restart --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group YOUR_RG
