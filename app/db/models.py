@@ -7,6 +7,8 @@ from bson import ObjectId
 
 USERS_COLLECTION = "users"
 TOKEN_BLACKLIST_COLLECTION = "token_blacklist"
+CHAT_CONVERSATIONS_COLLECTION = "chat_conversations"
+CHAT_MESSAGES_COLLECTION = "chat_messages"
 
 _PERSONAL_INFO_KEYS = ("full_name", "date_of_birth", "gender")
 _CLINICAL_INFO_KEYS = (

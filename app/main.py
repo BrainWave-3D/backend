@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import auth as auth_routes
+from app.api import chat as chat_routes
 from app.api import predict as predict_routes
 from app.api import profile as profile_routes
 from app.core.config import settings
@@ -38,6 +39,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_routes.router)
     app.include_router(profile_routes.router)
     app.include_router(predict_routes.router)
+    app.include_router(chat_routes.router)
     app.include_router(metrics_router)
 
     return app

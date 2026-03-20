@@ -58,6 +58,38 @@
       "targets": [{"expr": "sum by (path) (rate(http_requests_total[5m]))", "legendFormat": "{{path}}", "refId": "A"}],
       "title": "Traffic by Path",
       "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 16},
+      "id": 6,
+      "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}},
+      "targets": [{"expr": "sum(rate(chat_messages_total{status=\"ok\"}[5m]))", "legendFormat": "chat mps", "refId": "A"}],
+      "title": "Chat Throughput",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 16},
+      "id": 7,
+      "targets": [
+        {"expr": "histogram_quantile(0.5, sum by (le) (rate(chat_response_duration_seconds_bucket[5m])))", "legendFormat": "chat p50", "refId": "A"},
+        {"expr": "histogram_quantile(0.95, sum by (le) (rate(chat_response_duration_seconds_bucket[5m])))", "legendFormat": "chat p95", "refId": "B"}
+      ],
+      "title": "Chat Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "none"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 16},
+      "id": 8,
+      "options": {"colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}},
+      "targets": [{"expr": "sum(chat_active_connections)", "legendFormat": "active ws", "refId": "A"}],
+      "title": "Active Chat Connections",
+      "type": "stat"
     }
   ],
   "refresh": "10s",
@@ -70,6 +102,6 @@
   "timezone": "",
   "title": "Backend API Overview",
   "uid": "backend-overview",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

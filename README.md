@@ -52,6 +52,37 @@ The service listens on `http://127.0.0.1:8000` by default. Startup establishes t
 | PUT    | `/profile/me`  | Update profile fields               |
 | DELETE | `/profile/me`  | Delete current account              |
 
+### Simple Chatbot (Prototype)
+
+Use these simplified routes (no conversation IDs needed from frontend):
+
+| Method | Path             | Description                                      |
+| ------ | ---------------- | ------------------------------------------------ |
+| POST   | `/chat/message`  | Send one message and get assistant reply         |
+| GET    | `/chat/history`  | Read current user's default chat history         |
+| WS     | `/chat/ws`       | Real-time streaming chat (`?token=<access_token>`) |
+
+WebSocket payload can be minimal:
+
+```json
+{
+   "content": "Give me a quick overview of my profile",
+   "prediction_summary": "optional latest report summary"
+}
+```
+
+### Groq Setup (.env)
+
+Set provider to Groq and place your API key in `.env`:
+
+```env
+LLM_PROVIDER=groq
+LLM_MODEL_NAME=llama-3.1-8b-instant
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+You can start from `.env.example` in the repo root.
+
 All profile routes require a valid `Authorization: Bearer <access_token>` header.
 
 ## Migrations
@@ -119,6 +150,15 @@ Grafana automatically loads dashboards from `monitoring/grafana/dashboards/`:
 - `Backend API Overview`
 - `Backend Status Breakdown`
 - `Backend Runtime Health`
+
+### Chat Metrics Exposed
+
+The backend now exports chat-specific metrics at `/metrics`:
+
+- `chat_messages_total{channel,role,status,provider}`
+- `chat_response_duration_seconds{channel,provider}`
+- `chat_active_connections{provider}`
+- `llm_provider_errors_total{provider}`
 
 ### Key Monitoring Files
 

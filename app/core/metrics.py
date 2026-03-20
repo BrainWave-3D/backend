@@ -21,6 +21,27 @@ REQUESTS_IN_PROGRESS = Gauge(
     "In-flight HTTP requests",
     labelnames=("method", "path"),
 )
+CHAT_MESSAGES_TOTAL = Counter(
+    "chat_messages_total",
+    "Total chat messages processed",
+    labelnames=("channel", "role", "status", "provider"),
+)
+CHAT_RESPONSE_DURATION = Histogram(
+    "chat_response_duration_seconds",
+    "Chat response latency in seconds",
+    labelnames=("channel", "provider"),
+    buckets=(0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0, 20.0, 30.0),
+)
+CHAT_ACTIVE_CONNECTIONS = Gauge(
+    "chat_active_connections",
+    "Active chat websocket connections",
+    labelnames=("provider",),
+)
+LLM_PROVIDER_ERRORS = Counter(
+    "llm_provider_errors_total",
+    "Total LLM provider errors",
+    labelnames=("provider",),
+)
 
 metrics_router = APIRouter()
 

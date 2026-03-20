@@ -18,6 +18,12 @@ python-jose[cryptography]==3.5.0
 motor==3.7.1
 pymongo==4.15.4
 
+# LLM orchestration
+langchain==0.3.27
+langchain-core==0.3.79
+langchain-groq==0.2.3
+langchain-google-genai==2.1.12
+
 # ML / prediction pipeline used by app and scripts
 numpy==1.26.4
 scipy==1.11.4
